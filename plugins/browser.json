@@ -1,0 +1,73 @@
+{
+    "prepare_queue": {
+        "installed": [],
+        "uninstalled": []
+    },
+    "config_munge": {
+        "files": {}
+    },
+    "installed_plugins": {
+        "cordova-plugin-battery-status": {
+            "PACKAGE_NAME": "cf.aksharma.dbconnect"
+        },
+        "cordova-plugin-camera": {
+            "PACKAGE_NAME": "cf.aksharma.dbconnect"
+        },
+        "cordova-plugin-media-capture": {
+            "PACKAGE_NAME": "cf.aksharma.dbconnect"
+        },
+        "cordova-plugin-console": {
+            "PACKAGE_NAME": "cf.aksharma.dbconnect"
+        },
+        "cordova-plugin-contacts": {
+            "PACKAGE_NAME": "cf.aksharma.dbconnect"
+        },
+        "cordova-plugin-device": {
+            "PACKAGE_NAME": "cf.aksharma.dbconnect"
+        },
+        "cordova-plugin-device-motion": {
+            "PACKAGE_NAME": "cf.aksharma.dbconnect"
+        },
+        "cordova-plugin-device-orientation": {
+            "PACKAGE_NAME": "cf.aksharma.dbconnect"
+        },
+        "cordova-plugin-dialogs": {
+            "PACKAGE_NAME": "cf.aksharma.dbconnect"
+        },
+        "cordova-plugin-file-transfer": {
+            "PACKAGE_NAME": "cf.aksharma.dbconnect"
+        },
+        "cordova-plugin-geolocation": {
+            "PACKAGE_NAME": "cf.aksharma.dbconnect"
+        },
+        "cordova-plugin-globalization": {
+            "PACKAGE_NAME": "cf.aksharma.dbconnect"
+        },
+        "cordova-plugin-inappbrowser": {
+            "PACKAGE_NAME": "cf.aksharma.dbconnect"
+        },
+        "cordova-plugin-media": {
+            "PACKAGE_NAME": "cf.aksharma.dbconnect"
+        },
+        "cordova-plugin-network-information": {
+            "PACKAGE_NAME": "cf.aksharma.dbconnect"
+        },
+        "cordova-plugin-splashscreen": {
+            "PACKAGE_NAME": "cf.aksharma.dbconnect"
+        },
+        "cordova-plugin-statusbar": {
+            "PACKAGE_NAME": "cf.aksharma.dbconnect"
+        },
+        "cordova-plugin-vibration": {
+            "PACKAGE_NAME": "cf.aksharma.dbconnect"
+        },
+        "cordova-plugin-whitelist": {
+            "PACKAGE_NAME": "cf.aksharma.dbconnect"
+        }
+    },
+    "dependent_plugins": {
+        "cordova-plugin-file": {
+            "PACKAGE_NAME": "cf.aksharma.dbconnect"
+        }
+    }
+}
