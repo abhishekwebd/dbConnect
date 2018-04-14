@@ -34,7 +34,15 @@
 	<!-- //online-fonts -->
 
 	<script src="js/script.js"></script>
-
+<script type="text/javascript">
+	if(localStorage.getItem("IsStep1") != null){
+	window.location.href = "login.html";
+}
+function nextClick()
+{
+	localStorage.setItem("IsStep1","Done");
+}
+</script>
 </head>
 
 <body>
@@ -62,10 +70,11 @@ Even there are options available to perform quick operation like :</p>
   </p>
 </blockquote>
 <div class="text-right">
-  <a href="login.html" >Next</a>
+  <a href="login.html" onclick="nextClick()">Next</a>
 </div>
 
 </div>
+
 </body>
 
 </html>
