@@ -52,20 +52,20 @@
                   <legend>Sign Up</legend>
                  <div class="form-group">
                     <label for="exampleInputEmail1">Full Name</label>
-                    <input type="text" class="form-control" id="exampleInputName" aria-describedby="NameHelp" ng-model="Name" placeholder="Enter Full Name">
+                    <input type="text" class="form-control" id="exampleInputName"  aria-describedby="NameHelp" ng-model="Name" placeholder="Enter Full Name">
                     
                   </div>
                   <div class="form-group">
                     <label for="exampleInputEmail1">Email address</label>
-                    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" ng-model="Email" placeholder="Enter email">
+                    <input type="email" class="form-control" id="exampleInputEmail1"  aria-describedby="emailHelp" ng-model="Email" placeholder="Enter email">
                     <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
                   </div>
                   <div class="form-group">
                     <label for="exampleInputPassword1">Password</label>
-                    <input type="password" class="form-control" id="exampleInputPassword1" ng-model="Password" placeholder="Password">
+                    <input type="password" class="form-control" id="exampleInputPassword1"  ng-model="Password" placeholder="Password">
                   </div>
-                
-                  <button type="submit" class="btn btn-primary" ng-click="Signup">SignUp</button>
+                       <div class="form-group">{{error}} </div>
+                  <button type="submit" class="btn btn-primary" ng-click="Signup()">SignUp</button>
                 </fieldset>
             </div>  
 <br>
@@ -81,30 +81,31 @@
 	app.controller('RecordCtrl', function ($scope, $http) {
  
     $scope.Signup = function () {
-	
-        http = localStorage.getItem("serverpath")+"data.php?Code=logincheck&username="+$scope.username+"&password="+$scope.password;//the REST service Server to fetch the day stock 
-        $http.get(http)
-            .then(function (response) {$scope.names = response.data.d; 
-            	if(response.data.d[0].Code != 0)
-            	{
-            			
-            			if(response.data.d[0].IsVerified == 0)
-            			{
-							window.location.href = "Verify.html";
-            			}
-            			else{
-            			localStorage.setItem("Code",response.data.d[0].Code);
-            			localStorage.setItem("IsVerified",response.data.d[0].IsVerified);
-            			window.location.href = "Home.html";
-            			}
-            		
-            	}else{
-            				$scope.error = response.data.d[0].Msg;
-            		}
-            });
+   
+	if($scope.Name != null && $scope.Email != null && $scope.Password != null && $scope.Name != "" && $scope.Email != "" && $scope.Password != "" ){
 
-           
+
+ 		 var otp =  Math.floor(100000 + Math.random() * 900000);
+           http = localStorage.getItem("serverpath")+"data.php?Code=Sendmail&name="+$scope.Name+"&email="+$scope.Email+"&otp="+otp;//the REST
+
+            $http.get(http);
+             localStorage.setItem("RegName",$scope.Name);
+             localStorage.setItem("RegEmail",$scope.Email);
+             localStorage.setItem("RegOtp",otp);
+             localStorage.setItem("RegPassword",$scope.Password);
+            window.location.href = "SubmitOTP.html";
+        
+
+
+  	}
+    else
+    {
+      $scope.error = "All Fields  are Mendatory";
     }
+          
+          
+    }
+  
     
 });
 

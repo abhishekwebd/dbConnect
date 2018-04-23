@@ -74,19 +74,27 @@
 <script>
 	var app = angular.module('myApp', []);
 	app.controller('RecordCtrl', function ($scope, $http) {
- 
-  
-    $http.get("https://ipinfo.io/").then(function (response) 
+
+
+ if(localStorage.getItem("Ip") == null)
+ {
+
+    $http.get("https://freegeoip.net/json/").then(function (response) 
         {
             // $scope.ip = response.data.ip;
-            sessionStorage.setItem("Ip",response.data.ip);
-           sessionStorage.setItem("Location",response.data.city+' | '+response.data.region);
+           
+            localStorage.setItem("Ip",response.data.ip);
+         //  sessionStorage.setItem("Location",response.data.city+' | '+response.data.region);
+             localStorage.setItem("Location",response.data.city+' | '+response.data.region_name);
             
         });
+ } 
+  
 
     $scope.Login = function () {
 	
         http = localStorage.getItem("serverpath")+"data.php?Code=logincheck&username="+$scope.username+"&password="+$scope.password;//the REST service Server to fetch the day stock 
+      
         $http.get(http)
             .then(function (response) {$scope.names = response.data.d; 
             	if(response.data.d[0].Code != 0)
