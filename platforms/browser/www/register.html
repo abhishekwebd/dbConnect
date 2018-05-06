@@ -35,7 +35,12 @@
 	<!-- //online-fonts -->
 
 	<script src="js/script.js"></script>
+<script type="text/javascript">
+if(localStorage.getItem("Code") != null ){
 
+  window.location.href = "Home.html";
+}
+</script>
 </head>
 
 <body>
@@ -85,17 +90,31 @@
 	if($scope.Name != null && $scope.Email != null && $scope.Password != null && $scope.Name != "" && $scope.Email != "" && $scope.Password != "" ){
 
 
- 		 var otp =  Math.floor(100000 + Math.random() * 900000);
-           http = localStorage.getItem("serverpath")+"data.php?Code=Sendmail&name="+$scope.Name+"&email="+$scope.Email+"&otp="+otp;//the REST
+ 		// var otp =  Math.floor(100000 + Math.random() * 900000);
+           // http = localStorage.getItem("serverpath")+"data.php?Code=Sendmail&name="+$scope.Name+"&email="+$scope.Email+"&otp="+otp;//the REST
 
-            $http.get(http);
-             localStorage.setItem("RegName",$scope.Name);
-             localStorage.setItem("RegEmail",$scope.Email);
-             localStorage.setItem("RegOtp",otp);
-             localStorage.setItem("RegPassword",$scope.Password);
-            window.location.href = "SubmitOTP.html";
+           //  $http.get(http);
+           //   localStorage.setItem("RegName",$scope.Name);
+           //   localStorage.setItem("RegEmail",$scope.Email);
+           //   localStorage.setItem("RegOtp",otp);
+           //   localStorage.setItem("RegPassword",$scope.Password);
+           //  window.location.href = "SubmitOTP.html";
         
+         var q = "exec sp_UserReg '"+$scope.Name+"','"+$scope.Email+"','"+$scope.Password+"','"+localStorage.getItem("Ip")+"','"+localStorage.getItem("Location")+"'"  
 
+              http = localStorage.getItem("serverpath")+"data.php?Code=execute&q="+q;//the REST service Server to fetch the day stock 
+          
+            $http.get(http)
+                .then(function (response) {$scope.names = response.data.result; 
+                  if(response.data.result[0].Code != 0)
+                  {
+                     localStorage.setItem("Code",response.data.result[0].Code);
+                         window.location.href = "Home.html";
+                    
+                  }else{
+                        $scope.error = response.data.result[0].Msg;
+                    }
+                });
 
   	}
     else

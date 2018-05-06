@@ -34,7 +34,12 @@
 	<!-- //online-fonts -->
 
 	<script src="js/script.js"></script>
+<script type="text/javascript">
+if(localStorage.getItem("Code") != null ){
 
+  window.location.href = "Home.html";
+}
+</script>
 </head>
 
 <body>
@@ -60,7 +65,7 @@
                     <input type="password" class="form-control" id="exampleInputPassword1" ng-model="password" placeholder="Password">
                   </div>
                 
-                  <button type="submit" class="btn btn-primary" ng-click="Login()">LoginIn</button>&nbsp;<span>{{ error }}</span>
+                  <button type="submit" class="btn btn-primary" ng-click="Login()">LoginIn</button><br><span>{{ error }}</span>
                 </fieldset>
             </div>  
 <br>
@@ -94,21 +99,32 @@
     $scope.Login = function () {
 	
         http = localStorage.getItem("serverpath")+"data.php?Code=logincheck&username="+$scope.username+"&password="+$scope.password;//the REST service Server to fetch the day stock 
-      
+     
         $http.get(http)
             .then(function (response) {$scope.names = response.data.d; 
             	if(response.data.d[0].Code != 0)
             	{
-            			
-            			if(response.data.d[0].IsVerified == 0)
-            			{
-							window.location.href = "Verify.html";
-            			}
-            			else{
-            			localStorage.setItem("Code",response.data.d[0].Code);
-            			localStorage.setItem("IsVerified",response.data.d[0].IsVerified);
-            			window.location.href = "Home.html";
-            			}
+                if(response.data.d[0].IsDeactive == 0)
+                {
+                        localStorage.setItem("Code",response.data.d[0].Code);
+                   localStorage.setItem("Name",response.data.d[0].Name);
+                   localStorage.setItem("Email",response.data.d[0].Email);
+                   window.location.href = "Home.html";
+       //           if(response.data.d[0].IsVerified == 0)
+       //           {
+              // window.location.href = "Verify.html";
+       //           }
+       //           else{
+       //           localStorage.setItem("Code",response.data.d[0].Code);
+       //           localStorage.setItem("IsVerified",response.data.d[0].IsVerified);
+       //           window.location.href = "Home.html";
+       //           }
+                }
+                else
+                {
+                    $scope.error = "Your account has been deactivated. For activation , please send and email to databaseconnectinc@gmail.com .";
+                }
+               
             		
             	}else{
             				$scope.error = response.data.d[0].Msg;
