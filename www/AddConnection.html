@@ -35,8 +35,8 @@
 
     <div id="loading" class="loader">   
     </div>
-    <div ng-app="myApp"  ng-controller="HomeCtrl">
-        <div class="wrapper">
+    <div ng-app="myApp"  ng-controller="AddConnCtrl">
+        <div class="wrapper" >
             <!-- Sidebar Holder -->
             <nav id="sidebar">
                 <div class="sidebar-header">
@@ -105,17 +105,34 @@
                 </nav>
 
 
-         <table class="table" >
-             <tr>
-                 <td><a class="btn btn-block btn-primary" href="AddConnection.html"><i class="fa fa-server" style="font-size: large;"><br>Add Conn<sup>str</sup></i></a></td>
-                 <td><a class="btn btn-block btn-primary" href="#"><i class="fa fa-code" style="font-size: large;"><br>Execute Query</i></a></td>
-
-             </tr>
-          <tr>
-                 <td><a class="btn btn-block btn-primary" href="#"><i class="fa fa-wrench" style="font-size: large;"><br>Quick Tools</i></a></td>
-                 <td><a class="btn btn-block btn-primary" href="#"><i class="fa fa-gear" style="font-size: large;"><br>Setting</i></a></td>
-             </tr>
-         </table>
+           <div class="form">
+            <b>{{alert}}</b>
+                 <div class="form-group">
+       <select  class="form-control" ng-options="opt.id as opt.name for opt in DBType"  ng-model="DBTypeList">
+            <option value="" selected="selected" disabled="">Select Database Type</option>
+       </select>
+                </div>
+      <div class="form-group">
+      <input type="text" class="form-control" id="txtserver" ng-model="txtserver" required="" aria-describedby="emailHelp" placeholder="Enter Server Name/IP">
+     
+    </div>
+  <div class="form-group">
+      <input type="text" class="form-control" id="txtdb" ng-model="txtdb" required="" aria-describedby="emailHelp" placeholder="Enter Database Name">
+     
+    </div>
+      <div class="form-group">
+      <input type="text" class="form-control" id="txtusername" ng-model="txtusername" required="" aria-describedby="emailHelp" placeholder="Enter Username">
+     
+    </div>
+      <div class="form-group">
+      <input type="password" class="form-control" id="txtpassword" ng-model="txtpassword" required="" aria-describedby="emailHelp" placeholder="Enter Password">
+     
+    </div>
+      <div class="form-group text-center">
+     <button type="button" class="btn btn-block btn-success" ng-click="ADD()" ng-model="btnAdd"><i class="fa fa-plus"></i></button>
+     {{error}}
+    </div>
+           </div>
 
 
 
@@ -128,9 +145,15 @@
 
 <script>
     var app = angular.module('myApp', []);
-    app.controller('HomeCtrl', function ($scope, $http) {
+    app.controller('AddConnCtrl', function ($scope, $http) {
 
+  $scope.DBType = [
+            {name:'SQL', id:1},
+            {name:'MySQL', id:0},
+            {name:'Oracle', id:2}
+          ]
     $scope.Name = localStorage.getItem("Name");
+    $scope.alert = "ADD CONNECTION STRING";
     if(localStorage.getItem("ActiveDB") == null)
  {
     $scope.ActiveDbName = "Active Database Name will show here";
@@ -161,7 +184,24 @@
                  window.location.href= "login.html";
     }
   
-
+     $scope.ADD = function(){
+                if($scope.txtserver != undefined && $scope.txtdb != undefined && $scope.txtusername != undefined && $scope.txtpassword != undefined){
+                q = "exec sp_ServerCred 0,"+localStorage.getItem("Code")+",'"+$scope.txtserver+"', '"+$scope.txtdb+"','"+$scope.txtusername+"','"+$scope.txtpassword+"','"+localStorage.getItem("Ip")+"','"+localStorage.getItem("Location")+"','I',0";
+                //alert(q);
+             $http.get(localStorage.getItem("serverpath")+"data.php?Code=execute&q="+q)
+             .then(function (response) { 
+                     $scope.error = response.data.result[0].Msg;
+                if(response.data.result[0].Code == 1){
+                     window.location.href= "ViewConnection.html";
+                }
+                      
+            });
+                }
+                else
+                {
+                        $scope.error = "All Fields are Mendatory !";
+                }
+            }
     
     
 });

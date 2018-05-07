@@ -35,7 +35,7 @@
 
     <div id="loading" class="loader">   
     </div>
-    <div ng-app="myApp"  ng-controller="HomeCtrl">
+    <div ng-app="myApp"  ng-controller="ViewConnCtrl">
         <div class="wrapper">
             <!-- Sidebar Holder -->
             <nav id="sidebar">
@@ -95,28 +95,32 @@
                             </ul>
                         </div>
                    
-                        
-                          
-                    
-                   
-
-
                     </div>
                 </nav>
 
+    <div  style="overflow: scroll;" >
+                                <table class="table"  >
+                                <tr style="font-weight: bold;" class="table-dark">
+                                    <th>Server</th>
+                                    <th>Database</th>
+                                    <th>Username</th>
+                                    <th>Password</th>
+                                </tr>
+                               <tr ng-repeat="x in details" style="text-align: left;">
+                                    
+                                    <td>
+                                        <span>{{ x.Servername }}</span> </td>
+                                    <td>
+                                        <span>{{ x.Databasename }}</span> </td>
+                                    <td>
+                                        <span>{{ x.Username }}</span> </td>
+                                    <td>
+                                        <span>{{ x.Userpassword }}</span> </td>
+                               </tr>         
+                                </table>
+                            </div>
 
-         <table class="table" >
-             <tr>
-                 <td><a class="btn btn-block btn-primary" href="AddConnection.html"><i class="fa fa-server" style="font-size: large;"><br>Add Conn<sup>str</sup></i></a></td>
-                 <td><a class="btn btn-block btn-primary" href="#"><i class="fa fa-code" style="font-size: large;"><br>Execute Query</i></a></td>
-
-             </tr>
-          <tr>
-                 <td><a class="btn btn-block btn-primary" href="#"><i class="fa fa-wrench" style="font-size: large;"><br>Quick Tools</i></a></td>
-                 <td><a class="btn btn-block btn-primary" href="#"><i class="fa fa-gear" style="font-size: large;"><br>Setting</i></a></td>
-             </tr>
-         </table>
-
+                            
 
 
 
@@ -128,7 +132,7 @@
 
 <script>
     var app = angular.module('myApp', []);
-    app.controller('HomeCtrl', function ($scope, $http) {
+    app.controller('ViewConnCtrl', function ($scope, $http) {
 
     $scope.Name = localStorage.getItem("Name");
     if(localStorage.getItem("ActiveDB") == null)
@@ -153,6 +157,10 @@
         });
  } 
 
+var q = "select * from tblservercred where UserCode = "+localStorage.getItem("Code");
+    $http.get(localStorage.getItem("serverpath")+"data.php?Code=execute&q="+q)
+            .then(function (response) {$scope.details = response.data.result; });
+
     $scope.Logout = function () {
 
                 localStorage.removeItem("Code");
@@ -161,7 +169,7 @@
                  window.location.href= "login.html";
     }
   
-
+ 
     
     
 });
