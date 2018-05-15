@@ -11,8 +11,9 @@
   <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
         <!-- Our Custom CSS -->
         <link rel="stylesheet" href="css/style5.css">
-    <link rel="stylesheet" href="css/font-awesome.css">
+        <link rel="stylesheet" href="css/akModal.css">
 
+    <link rel="stylesheet" href="css/font-awesome.css">
         <!-- jQuery CDN -->
     <script src="js/angular.min.js"></script>
     <script src="js/angular-touch.min.js"></script>
@@ -45,12 +46,12 @@
 
                 <ul class="list-unstyled components">
                    
-                     
+                    <li><a href="Home.html">Go Home</a></li>  
                      <li>
                         <a href="#">Execute Query</a>
                     </li>
                      <li><a href="AddConnection.html">Add Connection</a></li>
-                     <li><a href="#">View Connections</a></li>
+                     <li><a href="ViewConnection.html">View Connections</a></li>
                          <li><a href="#">View all Tables</a></li>
                             <li><a href="#">View all Procedures</a></li>
                             <li><a href="#">View Defenation of a Procedure</a></li>
@@ -99,28 +100,36 @@
                 </nav>
 
     <div  style="overflow: scroll;" >
+   
+
                                 <table class="table"  >
                                 <tr style="font-weight: bold;" class="table-dark">
-                                    <th>Server</th>
+                               
                                     <th>Database</th>
-                                    <th>Username</th>
-                                    <th>Password</th>
+                                 <th>Actions</th>
+                                    
                                 </tr>
                                <tr ng-repeat="x in details" style="text-align: left;">
                                     
+                                
                                     <td>
-                                        <span>{{ x.Servername }}</span> </td>
+                                     <a ng-click="viewdb(x.Code)">    {{ x.Databasename }} </a>
+                                     
+                                   </td>
+                                 
                                     <td>
-                                        <span>{{ x.Databasename }}</span> </td>
-                                    <td>
-                                        <span>{{ x.Username }}</span> </td>
-                                    <td>
-                                        <span>{{ x.Userpassword }}</span> </td>
+                                      <a ng-click="Activate(x.Code)">  Activate </a>
+                                      &nbsp; <i class="fa fa-pencil-square-o" ></i>
+                                       &nbsp; <i class="fa fa-remove"></i>
+                                    </td>
+                                    
                                </tr>         
                                 </table>
                             </div>
 
                             
+
+
 
 
 
@@ -135,13 +144,13 @@
     app.controller('ViewConnCtrl', function ($scope, $http) {
 
     $scope.Name = localStorage.getItem("Name");
-    if(localStorage.getItem("ActiveDB") == null)
+    if(localStorage.getItem("active_DB") == null)
  {
     $scope.ActiveDbName = "Active Database Name will show here";
  }
  else
  {
-  $scope.ActiveDbName = localStorage.getItem("ActiveDB");
+  $scope.ActiveDbName = localStorage.getItem("active_DB");
  }
  if(localStorage.getItem("Ip") == null)
  {
@@ -157,7 +166,8 @@
         });
  } 
 
-var q = "select * from tblservercred where UserCode = "+localStorage.getItem("Code");
+var q = "select * from tblservercred where IsDelete =0 and IsDeactive =0 and UserCode = "+localStorage.getItem("Code");
+
     $http.get(localStorage.getItem("serverpath")+"data.php?Code=execute&q="+q)
             .then(function (response) {$scope.details = response.data.result; });
 
@@ -168,15 +178,36 @@ var q = "select * from tblservercred where UserCode = "+localStorage.getItem("Co
                  localStorage.removeItem("Email");
                  window.location.href= "login.html";
     }
+
+   $scope.Activate = function(code){
+        var q = "select * from tblservercred where IsDelete =0 and IsDeactive =0 and Code = "+code;
+
+    $http.get(localStorage.getItem("serverpath")+"data.php?Code=execute&q="+q)
+            .then(function (response) {
+
+           localStorage.setItem("active_Server",response.data.result[0].Servername);   
+             localStorage.setItem("active_DB",response.data.result[0].Databasename); 
+              localStorage.setItem("active_User",response.data.result[0].Username); 
+               localStorage.setItem("active_Pass",response.data.result[0].Userpassword);        
+                   window.location.href= "ViewConnection.html";
+      });
+       
+    }
+
+    $scope.viewdb = function(code)
+    {
+        sessionStorage.setItem("viewdb",code);
+         window.location.href= "dbdetail.html";
+    }
   
- 
-    
+
     
 });
 
 </script>
 <script type="text/javascript" src="js/sc_index.js"></script>
-   
+<!--    <script type="text/javascript" src="js/akModal.js"></script> -->
+
          <!-- Bootstrap Js CDN -->
          <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 

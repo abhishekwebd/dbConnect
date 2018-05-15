@@ -45,12 +45,12 @@
 
                 <ul class="list-unstyled components">
                    
-                     
+                     <li><a href="Home.html">Go Home</a></li>
                      <li>
                         <a href="#">Execute Query</a>
                     </li>
                      <li><a href="AddConnection.html">Add Connection</a></li>
-                     <li><a href="#">View Connections</a></li>
+                     <li><a href="ViewConnection.html">View Connections</a></li>
                          <li><a href="#">View all Tables</a></li>
                             <li><a href="#">View all Procedures</a></li>
                             <li><a href="#">View Defenation of a Procedure</a></li>
@@ -108,12 +108,17 @@
          <table class="table" >
              <tr>
                  <td><a class="btn btn-block btn-primary" href="AddConnection.html"><i class="fa fa-server" style="font-size: large;"><br>Add Conn<sup>str</sup></i></a></td>
-                 <td><a class="btn btn-block btn-primary" href="#"><i class="fa fa-code" style="font-size: large;"><br>Execute Query</i></a></td>
 
+  <td><a class="btn btn-block btn-primary" href="ViewConnection.html"><i class="fa fa-eye" style="font-size: large;"><br>View Conn<sup>str</sup></i></a></td>
+                
              </tr>
           <tr>
                  <td><a class="btn btn-block btn-primary" href="#"><i class="fa fa-wrench" style="font-size: large;"><br>Quick Tools</i></a></td>
                  <td><a class="btn btn-block btn-primary" href="#"><i class="fa fa-gear" style="font-size: large;"><br>Setting</i></a></td>
+             </tr>
+             <tr>
+             <td><a class="btn btn-block btn-primary" href="#"><i class="fa fa-code" style="font-size: large;"><br>Execute Query</i></a></td>
+
              </tr>
          </table>
 
@@ -131,13 +136,13 @@
     app.controller('HomeCtrl', function ($scope, $http) {
 
     $scope.Name = localStorage.getItem("Name");
-    if(localStorage.getItem("ActiveDB") == null)
+    if(localStorage.getItem("active_DB") == null)
  {
     $scope.ActiveDbName = "Active Database Name will show here";
  }
  else
  {
-  $scope.ActiveDbName = localStorage.getItem("ActiveDB");
+  $scope.ActiveDbName = localStorage.getItem("active_DB");
  }
  if(localStorage.getItem("Ip") == null)
  {
