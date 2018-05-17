@@ -98,6 +98,7 @@ if(localStorage.getItem("Code") != null ){
 
     $scope.Login = function () {
 	
+  $scope.error = "Wait ...";  
         http = localStorage.getItem("serverpath")+"data.php?Code=logincheck&username="+$scope.username+"&password="+$scope.password;//the REST service Server to fetch the day stock 
      
         $http.get(http)
@@ -131,7 +132,7 @@ if(localStorage.getItem("Code") != null ){
             		}
             });
 
-           
+          
     }
     
 });
