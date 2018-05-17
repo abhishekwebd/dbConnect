@@ -38,8 +38,8 @@
     <div ng-app="myApp"  ng-controller="HomeCtrl">
         <div class="wrapper">
             <!-- Sidebar Holder -->
-                <div ng-include="'sidebar.html'"></div>
-      
+            <div ng-include="'sidebar.html'"></div>
+        
 
             <!-- Page Content Holder -->
             <div id="content" style="width: 100%;">
@@ -69,35 +69,22 @@
                             </ul>
                         </div>
                    
-                        
-                          
-                    
-                   
-
-
                     </div>
                 </nav>
 
 
-         <table class="table" >
-             <tr>
-                 <td><a class="btn btn-block btn-primary" href="AddConnection.html"><i class="fa fa-server" style="font-size: large;"><br>Add Conn<sup>str</sup></i></a></td>
+        
 
-  <td><a class="btn btn-block btn-primary" href="ViewConnection.html"><i class="fa fa-eye" style="font-size: large;"><br>View Conn<sup>str</sup></i></a></td>
-                
-             </tr>
-          <tr>
-                 <td><a class="btn btn-block btn-primary" href="#"><i class="fa fa-wrench" style="font-size: large;"><br>Quick Tools</i></a></td>
-                 <td><a class="btn btn-block btn-primary" href="#"><i class="fa fa-gear" style="font-size: large;"><br>Setting</i></a></td>
-             </tr>
-             <tr>
-             <td><a class="btn btn-block btn-primary" href="ExecuteQuery.html"><i class="fa fa-code" style="font-size: large;"><br>Execute Query</i></a></td>
-
-             </tr>
-         </table>
-
-
-
+                <div class="form-group">
+      <label for="exampleTextarea">Execute Query</label>
+      <textarea class="form-control" id="exampleTextarea" ng-model="txtquery" rows="3"></textarea>
+    <button type="button" class="btn btn-primary pull-right" ng-click="ExecuteNonQuery2()"><i class="fa fa-code"></i></button> 
+    </div>   
+            <div class="form-group" ng-model="outputarea">
+              <span>{{alert}}</span>
+            
+               <div id="opttable" style="font-size: small;overflow: scroll;"></div>
+            </div>
 
             </div>
         </div>
@@ -139,16 +126,90 @@
                  localStorage.removeItem("Email");
                  window.location.href= "login.html";
     }
+
+    $scope.ExecuteNonQuery = function(){
+      var q = $scope.txtquery;
+     //alert(localStorage.getItem("serverpath")+"data.php?Code=execute&q="+q);
+       $http.get(localStorage.getItem("serverpath")+"data.php?Code=execute&q="+q)
+            .then(function (response) {
+          
+            var rows = "<table style='font-size:small;font-weight:normal;' class='table'>";
+             if(response.data.Check == 1){
+                $scope.alert = "Query Executed Successfully !";
+                   var out = response.data.result;
+            for(x in out){
+              rows += "<tr>";
+                for(y in out[x]){
+                  rows += "<td>"+out[x][y]+"</td>";
+              }
+              rows += "</tr>";
+            }
+            rows += "</table>";
+            $("#opttable").append(rows);
+          
+             }
+             else
+             {
+                $scope.alert = "Query Failed to Executed !";
+                $("#opttable").empty();
+             }
+
+            
+
+            });
+    }
   
 
+      $scope.ExecuteNonQuery2 = function(){
+      var q = $scope.txtquery;
+     //alert(localStorage.getItem("serverpath")+"data.php?Code=execute&q="+q);
+     var data = {
+        Code: "execute",
+        q: q,
+        db: localStorage.getItem("active_DB"),
+        server: localStorage.getItem("active_Server"),
+        username: localStorage.getItem("active_User"),
+        password: localStorage.getItem("active_Pass")
+        };
+
+       $http.get(localStorage.getItem("serverpath")+"clientdata.php?Code=execute&q="+q+"&db="+localStorage.getItem("active_DB")+"&server="+localStorage.getItem("active_Server")+"&username="+localStorage.getItem("active_User")+"&password="+localStorage.getItem("active_Pass"))
+        .then(function (response) {
+     
+            var rows = "<table style='font-size:small;font-weight:normal;' class='table'>";
+             if(response.data.Check == 1){
+                $scope.alert = "Query Executed Successfully !";
+                   var out = response.data.result;
+            for(x in out){
+              rows += "<tr>";
+                for(y in out[x]){
+                  rows += "<td>"+out[x][y]+"</td>";
+              }
+              rows += "</tr>";
+            }
+            rows += "</table>";
+            $("#opttable").append(rows);
+          
+             }
+             else
+             {
+                $scope.alert = "Query Failed to Executed !";
+                $("#opttable").empty();
+             }
+
+            
+
+            });
+    }    
     
-    
+
+
+      
 });
 
 </script>
 <script type="text/javascript" src="js/sc_index.js"></script>
    
-        
+      
 
          <script type="text/javascript">
              $(document).ready(function () {

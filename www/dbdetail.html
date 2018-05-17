@@ -39,34 +39,7 @@
     <div ng-app="myApp"  ng-controller="DBDetailCtrl">
         <div class="wrapper">
             <!-- Sidebar Holder -->
-            <nav id="sidebar">
-                <div class="sidebar-header">
-                    <h3 >{{Name}}</h3>
-                </div>
-
-                <ul class="list-unstyled components">
-                   
-                      <li><a href="Home.html">Go Home</a></li>
-                     <li>
-                        <a href="#">Execute Query</a>
-                    </li>
-                     <li><a href="AddConnection.html">Add Connection</a></li>
-                     <li><a href="ViewConnection.html">View Connections</a></li>
-                         <li><a href="#">View all Tables</a></li>
-                            <li><a href="#">View all Procedures</a></li>
-                            <li><a href="#">View Defenation of a Procedure</a></li>
-                            <li><a href="#">Truncate One/All the Tables</a></li>
-                            <li><a href="#">Drop One/All the Tables</a></li>
-                   <li><a href="#">Update Profile</a></li>
-                  
-                   
-                </ul>
-
-                <ul class="list-unstyled CTAs">
-                    <li><a href="https://bootstrapious.com/tutorial/files/sidebar.zip" class="download">Upgrade To Pro</a></li>
-                    <li><a href="#" class="btn btn-primary btn-block" ng-click="Logout()">Log Out</a></li>
-                </ul>
-            </nav>
+      <div ng-include="'sidebar.html'"></div>
 
             <!-- Page Content Holder -->
             <div id="content" style="width: 100%;">
@@ -244,8 +217,7 @@ var q = "select * from tblservercred where Code = "+sessionStorage.getItem("view
 <script type="text/javascript" src="js/sc_index.js"></script>
 <!--    <script type="text/javascript" src="js/akModal.js"></script> -->
 
-         <!-- Bootstrap Js CDN -->
-         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+      
 
          <script type="text/javascript">
              $(document).ready(function () {
