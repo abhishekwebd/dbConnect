@@ -93,7 +93,7 @@
                                     <td>
                                       <a ng-click="Activate(x.Code)">  Activate </a>
                                       &nbsp; <i class="fa fa-pencil-square-o" ></i>
-                                       &nbsp; <i class="fa fa-remove"></i>
+                                       &nbsp; <i class="fa fa-remove" ng-click="Delete()"></i>
                                     </td>
                                     
                                </tr>         
@@ -114,7 +114,7 @@
 
 <script>
     var app = angular.module('myApp', []);
-    app.controller('ViewConnCtrl', function ($scope, $http) {
+    app.controller('ViewConnCtrl', function ($scope, $http,$window) {
 
     $scope.Name = localStorage.getItem("Name");
     if(localStorage.getItem("active_DB") == null)
@@ -167,6 +167,30 @@ var q = "select * from tblservercred where IsDelete =0 and IsDeactive =0 and Use
        
     }
 
+     $scope.Delete = function(){
+
+         if ($window.confirm("Please confirm?")) {
+                  
+                         var  q = "exec sp_ServerCred "+sessionStorage.getItem("viewdb")+","+localStorage.getItem("Code")+",'server', '"+$scope.dbname+"','username','Userpassword','"+localStorage.getItem("Ip")+"','"+localStorage.getItem("Location")+"','D',0,1";
+
+    $http.get(localStorage.getItem("serverpath")+"data.php?Code=execute&q="+q)
+            .then(function (response) {
+                 $scope.alert = response.data.result[0].Msg;
+                 window.setTimeout(function(){
+        window.location.href = "ViewConnection.html";
+
+    }, 2000);
+      });
+
+                } else {
+                    $scope.alert = "Cancelled !";
+        
+                }
+
+
+   
+       
+    }
     $scope.viewdb = function(code)
     {
         sessionStorage.setItem("viewdb",code);

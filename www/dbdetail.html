@@ -185,7 +185,7 @@ var q = "select * from tblservercred where Code = "+sessionStorage.getItem("view
 
          if ($window.confirm("Please confirm?")) {
                   
-                         var  q = "exec sp_ServerCred "+sessionStorage.getItem("viewdb")+","+localStorage.getItem("Code")+",'server', '"+$scope.dbname+"','username','Userpassword','"+localStorage.getItem("Ip")+"','"+localStorage.getItem("Location")+"','D',0";
+                         var  q = "exec sp_ServerCred "+sessionStorage.getItem("viewdb")+","+localStorage.getItem("Code")+",'server', '"+$scope.dbname+"','username','Userpassword','"+localStorage.getItem("Ip")+"','"+localStorage.getItem("Location")+"','D',0,1";
 
     $http.get(localStorage.getItem("serverpath")+"data.php?Code=execute&q="+q)
             .then(function (response) {

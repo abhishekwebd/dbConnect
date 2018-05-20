@@ -130,7 +130,7 @@
     $scope.ExecuteNonQuery = function(){
       var q = $scope.txtquery;
      //alert(localStorage.getItem("serverpath")+"data.php?Code=execute&q="+q);
-       $http.get(localStorage.getItem("serverpath")+"data.php?Code=execute&q="+q)
+      $http.get(localStorage.getItem("serverpath")+"clientdata.php?Code=execute&q="+q+"&db="+localStorage.getItem("active_DB").trim()+"&server="+localStorage.getItem("active_Server").trim()+"&username="+localStorage.getItem("active_User").trim()+"&password="+localStorage.getItem("active_Pass").trim())
             .then(function (response) {
           
             var rows = "<table style='font-size:small;font-weight:normal;' class='table'>";
@@ -172,7 +172,9 @@
         password: localStorage.getItem("active_Pass")
         };
 
-       $http.get(localStorage.getItem("serverpath")+"clientdata.php?Code=execute&q="+q+"&db="+localStorage.getItem("active_DB")+"&server="+localStorage.getItem("active_Server")+"&username="+localStorage.getItem("active_User")+"&password="+localStorage.getItem("active_Pass"))
+//document.write(localStorage.getItem("serverpath")+"clientdata.php?Code=execute&q="+q+"&db="+localStorage.getItem("active_DB")+"&server="+localStorage.getItem("active_Server")+"&username="+localStorage.getItem("active_User")+"&password="+localStorage.getItem("active_Pass"));
+
+       $http.get(localStorage.getItem("serverpath")+"clientdata.php?Code=execute&q="+q+"&db="+localStorage.getItem("active_DB").trim()+"&server="+localStorage.getItem("active_Server").trim()+"&username="+localStorage.getItem("active_User").trim()+"&password="+localStorage.getItem("active_Pass").trim())
         .then(function (response) {
      
             var rows = "<table style='font-size:small;font-weight:normal;' class='table'>";

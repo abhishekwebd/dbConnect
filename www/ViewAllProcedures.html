@@ -11,8 +11,9 @@
   <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
         <!-- Our Custom CSS -->
         <link rel="stylesheet" href="css/style5.css">
-    <link rel="stylesheet" href="css/font-awesome.css">
+        <link rel="stylesheet" href="css/akModal.css">
 
+    <link rel="stylesheet" href="css/font-awesome.css">
         <!-- jQuery CDN -->
     <script src="js/angular.min.js"></script>
     <script src="js/angular-touch.min.js"></script>
@@ -35,11 +36,10 @@
 
     <div id="loading" class="loader">   
     </div>
-    <div ng-app="myApp"  ng-controller="HomeCtrl">
+    <div ng-app="myApp"  ng-controller="ViewConnCtrl">
         <div class="wrapper">
             <!-- Sidebar Holder -->
-                <div ng-include="'sidebar.html'"></div>
-      
+      <div ng-include="'sidebar.html'"></div>
 
             <!-- Page Content Holder -->
             <div id="content" style="width: 100%;">
@@ -69,29 +69,37 @@
                             </ul>
                         </div>
                    
-                        
-                          
-                    
-                   
-
-
                     </div>
                 </nav>
 
+    <div  style="overflow: scroll;" >
+   
 
-         <table class="table" >
-             <tr>
-                 <td><a class="btn btn-block btn-primary" href="AddConnection.html"><i class="fa fa-server" style="font-size: large;"><br>Add Conn<sup>str</sup></i></a></td>
+                                <table class="table"  >
+                                <tr style="font-weight: bold;" class="table-dark">
+                               
+                                    <th class="text-center">Procedures</th>
+                                 <th class="text-center">View</th>
+                                    
+                                </tr>
+                               <tr ng-repeat="x in details" style="text-align: left;">
+                                    
+                                
+                                    <td class="text-center">
+                                     <a ng-click="viewprocdata(x.PROC_NAME)">    {{ x.PROC_NAME }} </a>
+                                     
+                                   </td>
+                                 
+                                    <td class="text-center">
+                                      <a ng-click="viewprocdata(x.PROC_NAME)"> <i class="fa fa-eye"></i> </a> 
+                                    </td>
+                                    
+                               </tr>         
+                                </table>
+                            </div>
 
-  <td><a class="btn btn-block btn-primary" href="ViewConnection.html"><i class="fa fa-eye" style="font-size: large;"><br>View Conn<sup>str</sup></i></a></td>
-                
-             </tr>
-          <tr>
-                 <td><a class="btn btn-block btn-primary" href="QuickTools.html"><i class="fa fa-wrench" style="font-size: large;"><br>Quick Tools</i></a></td>
-                 <td><a class="btn btn-block btn-primary" href="ExecuteQuery.html"><i class="fa fa-code" style="font-size: large;"><br>Execute Query</i></a></td>
-             </tr>
-        
-         </table>
+                            
+
 
 
 
@@ -104,7 +112,7 @@
 
 <script>
     var app = angular.module('myApp', []);
-    app.controller('HomeCtrl', function ($scope, $http) {
+    app.controller('ViewConnCtrl', function ($scope, $http) {
 
     $scope.Name = localStorage.getItem("Name");
     if(localStorage.getItem("active_DB") == null)
@@ -114,6 +122,11 @@
  else
  {
   $scope.ActiveDbName = localStorage.getItem("active_DB");
+  
+  var q = "select SPECIFIC_NAME as PROC_NAME from information_schema.ROUTINES where routine_type = 'PROCEDURE'";
+
+    $http.get(localStorage.getItem("serverpath")+"clientdata.php?Code=execute&q="+q+"&db="+localStorage.getItem("active_DB").trim()+"&server="+localStorage.getItem("active_Server").trim()+"&username="+localStorage.getItem("active_User").trim()+"&password="+localStorage.getItem("active_Pass").trim())
+            .then(function (response) {$scope.details = response.data.result; });
  }
  if(localStorage.getItem("Ip") == null)
  {
@@ -129,6 +142,8 @@
         });
  } 
 
+
+
     $scope.Logout = function () {
 
                 localStorage.removeItem("Code");
@@ -136,16 +151,25 @@
                  localStorage.removeItem("Email");
                  window.location.href= "login.html";
     }
+
+
+    $scope.viewprocdata = function(procname)
+    {
+       // alert(tblname);
+       sessionStorage.setItem("viewprocdata",procname);
+       window.location.href= "viewprocdata.html";
+    }
+  
   
 
-    
     
 });
 
 </script>
 <script type="text/javascript" src="js/sc_index.js"></script>
-   
-        
+<!--    <script type="text/javascript" src="js/akModal.js"></script> -->
+
+    
 
          <script type="text/javascript">
              $(document).ready(function () {

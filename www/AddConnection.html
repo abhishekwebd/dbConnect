@@ -122,8 +122,8 @@
 
   $scope.DBType = [
             {name:'SQL', id:1},
-            {name:'MySQL', id:0},
-            {name:'Oracle', id:2}
+            {name:'MySQL - Comming Soon', id:0},
+            {name:'Oracle - Comming Soon', id:2}
           ]
     $scope.Name = localStorage.getItem("Name");
     $scope.alert = "ADD CONNECTION STRING";
@@ -159,7 +159,7 @@
   
      $scope.ADD = function(){
                 if($scope.txtserver != undefined && $scope.txtdb != undefined && $scope.txtusername != undefined && $scope.txtpassword != undefined){
-                q = "exec sp_ServerCred 0,"+localStorage.getItem("Code")+",'"+$scope.txtserver+"', '"+$scope.txtdb+"','"+$scope.txtusername+"','"+$scope.txtpassword+"','"+localStorage.getItem("Ip")+"','"+localStorage.getItem("Location")+"','I',0";
+                q = "exec sp_ServerCred 0,"+localStorage.getItem("Code")+",'"+$scope.txtserver+"', '"+$scope.txtdb+"','"+$scope.txtusername+"','"+$scope.txtpassword+"','"+localStorage.getItem("Ip")+"','"+localStorage.getItem("Location")+"','I',0,1";
                 //alert(q);
              $http.get(localStorage.getItem("serverpath")+"data.php?Code=execute&q="+q)
              .then(function (response) { 
