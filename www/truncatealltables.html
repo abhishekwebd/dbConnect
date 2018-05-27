@@ -81,7 +81,7 @@ Despite of these advantages, TRUNCATE will have its own disadvantages.<br>
 <ul><li>TRUNCATE will reset the seed of an identity column to its initial value. If we don't want seed of identity column to reset after data deletion from table, then truncate is not an apt choice.</li>
 </ul><br>
 <ul><li>Statistics on table will not be updated automatically after TRUNCATE operation unless AUTO&nbsp;UPDATE STATISTICS is&nbsp;ON . So, After every TRUNCATE Statement it's required to update the statistics&nbsp;on table manually. &nbsp;If this operation is not done, then wrong statistics will up used for sometime, which may hit the performance.If you wait long enough, and if you have Auto Update Statistics turned on for the database, then the statistics will eventually catch up with themselves. But this may not happen quickly, resulting in slowly performing queries because the Query Optimiser is using out-of-date statistics.&nbsp;&nbsp;</li>
-    <li><button class="btn btn-outline-danger" ng-click="Truncate()">Click Here</button> to Truncate </li>
+    <li><button class="btn btn-outline-danger" ng-click="Truncate()">Click Here</button> to Truncate All</li>
 </ul></div>
 
 
@@ -104,7 +104,7 @@ Despite of these advantages, TRUNCATE will have its own disadvantages.<br>
 
 <script>
     var app = angular.module('myApp', []);
-    app.controller('ViewConnCtrl', function ($scope, $http) {
+    app.controller('ViewConnCtrl', function ($scope, $http,$window) {
 
         
     $scope.Name = localStorage.getItem("Name");
@@ -138,19 +138,26 @@ Despite of these advantages, TRUNCATE will have its own disadvantages.<br>
                 localStorage.removeItem("Code");
                  localStorage.removeItem("Name");
                  localStorage.removeItem("Email");
+                  localStorage.removeItem("active_DB");
+                 localStorage.removeItem("active_User");
+                 localStorage.removeItem("active_Server");
+                 localStorage.removeItem("active_Pass");
                  window.location.href= "login.html";
     }
 
 
      $scope.Truncate = function(){
-      var q = "";
+
+            if ($window.confirm("Please confirm?")) {
+
+                 var q = "EXEC sp_MSforeachtable @command1 = 'Truncate TABLE ?'";
      //alert(localStorage.getItem("serverpath")+"data.php?Code=execute&q="+q);
            $http.get(localStorage.getItem("serverpath")+"clientdata.php?Code=execute&q="+q+"&db="+localStorage.getItem("active_DB").trim()+"&server="+localStorage.getItem("active_Server").trim()+"&username="+localStorage.getItem("active_User").trim()+"&password="+localStorage.getItem("active_Pass").trim())
             .then(function (response) {
           
             var rows = "<table style='font-size:small;font-weight:normal;' class='table'>";
              if(response.data.Check == 1){
-                $scope.alert = "Query Executed Successfully !";
+                $scope.alert = "Truncation Successfull !";
                    var out = response.data.result;
             for(x in out){
               rows += "<tr>";
@@ -165,13 +172,19 @@ Despite of these advantages, TRUNCATE will have its own disadvantages.<br>
              }
              else
              {
-                $scope.alert = "Query Failed to Executed !";
+                $scope.alert = "Failed to Truncate !";
                 $("#opttable").empty();
              }
 
             
 
             });
+
+            }else {
+                    $scope.alert = "Cancelled !";
+        
+                }
+     
     }
 
     

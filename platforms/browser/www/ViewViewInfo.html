@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+        <title>Collapsible sidebar using Bootstrap 3</title>
+<link rel="stylesheet" href="css/loader.css">
+         <!-- Bootstrap CSS CDN -->
+  <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
+        <!-- Our Custom CSS -->
+        <link rel="stylesheet" href="css/style5.css">
+        <link rel="stylesheet" href="css/akModal.css">
+
+    <link rel="stylesheet" href="css/font-awesome.css">
+        <!-- jQuery CDN -->
+    <script src="js/angular.min.js"></script>
+    <script src="js/angular-touch.min.js"></script>
+    <script src="js/angular-animate.min.js"></script>
+            <script src="js/jquery.min.js"></script>
+
+               <script src="js/script.js"></script>
+              <style type="text/css">
+                  #sidebar{
+                    background-color: white;
+                    color: black;
+                  }
+                 #sidebar .sidebar-header{
+                    background: black;
+                    color: white; 
+                  }
+              </style> 
+    </head>
+    <body>
+
+    <div id="loading" class="loader">   
+    </div>
+    <div ng-app="myApp"  ng-controller="ViewConnCtrl">
+        <div class="wrapper">
+            <!-- Sidebar Holder -->
+      <div ng-include="'sidebar.html'"></div>
+
+            <!-- Page Content Holder -->
+            <div id="content" style="width: 100%;">
+
+                <nav class="navbar navbar-default ">
+                    <div class="container-fluid ">
+                    
+                                 <div class="navbar-header " style="width: 100%;">
+                            <button type="button" id="sidebarCollapse" class="navbar-btn">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </button>
+
+                            <button class="pull-right btn btn-danger" ng-click="Logout()"><i class="fa fa-power-off"></i></button>
+
+                        </div>
+                        <div class="text-center">
+   <span class="text-info"><b>{{ActiveDbName}}</b></span>
+</div>
+                        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                            <ul class="nav navbar-nav navbar-right">
+                                <li><a href="#">Page</a></li>
+                                <li><a href="#">Page</a></li>
+                                <li><a href="#">Page</a></li>
+                                <li><a href="#">Page</a></li>
+                            </ul>
+                        </div>
+                   
+                    </div>
+                </nav>
+
+    <div  style="overflow: scroll;" >
+         <span>{{alert}}</span>
+<br>
+                          <div id="opttable" style="font-size: small;overflow: scroll;"></div>
+
+                            </div>
+
+            </div>
+        </div>
+
+
+</div>
+
+<script>
+    var app = angular.module('myApp', []);
+    app.controller('ViewConnCtrl', function ($scope, $http) {
+
+    $scope.Name = localStorage.getItem("Name");
+    if(localStorage.getItem("active_DB") == null)
+ {
+    $scope.ActiveDbName = "Active Database Name will show here";
+ }
+ else
+ {
+  $scope.ActiveDbName = localStorage.getItem("active_DB");
+
+  var q= "SELECT * FROM sys.objects WHERE type = 'V' and name = '"+sessionStorage.getItem("viewviewdata")+"'";
+
+ $http.get(localStorage.getItem("serverpath")+"clientdata.php?Code=execute&q="+q+"&db="+localStorage.getItem("active_DB").trim()+"&server="+localStorage.getItem("active_Server").trim()+"&username="+localStorage.getItem("active_User").trim()+"&password="+localStorage.getItem("active_Pass").trim())
+            .then(function (response) {
+
+                    var rows = "<table style='font-size:small;font-weight:normal; border-collapse:inherit;background-color:gray;'>";
+             if(response.data.Check == 1){
+               $scope.alert = "Here is the View Information :";
+                   var out = response.data.result;
+            for(x in out){
+              rows += "<tr>";
+                for(y in out[x]){
+                  rows += "<td>"+out[x][y]+"</td>";
+              }
+              rows += "</tr>";
+            }
+            rows += "</table>";
+            $("#opttable").append(rows);
+          
+             }
+             else
+             {
+                $scope.alert = "Failed to retrive the information!";
+                $("#opttable").empty();
+             }
+
+
+             });
+ }
+ if(localStorage.getItem("Ip") == null)
+ {
+
+    $http.get("https://freegeoip.net/json/").then(function (response) 
+        {
+            // $scope.ip = response.data.ip;
+           
+            localStorage.setItem("Ip",response.data.ip);
+         //  sessionStorage.setItem("Location",response.data.city+' | '+response.data.region);
+             localStorage.setItem("Location",response.data.city+' | '+response.data.region_name);
+            
+        });
+ } 
+
+
+
+    $scope.Logout = function () {
+
+                localStorage.removeItem("Code");
+                 localStorage.removeItem("Name");
+                 localStorage.removeItem("Email");
+                  localStorage.removeItem("active_DB");
+                 localStorage.removeItem("active_User");
+                 localStorage.removeItem("active_Server");
+                 localStorage.removeItem("active_Pass");
+                 window.location.href= "login.html";
+    }
+
+
+    $scope.viewtbldata = function(tblname)
+    {
+       // alert(tblname);
+       sessionStorage.setItem("viewtbldata",tblname);
+       window.location.href= "viewtbldata.html";
+    }
+  
+
+    
+});
+
+</script>
+<script type="text/javascript" src="js/sc_index.js"></script>
+<!--    <script type="text/javascript" src="js/akModal.js"></script> -->
+
+    
+
+         <script type="text/javascript">
+             $(document).ready(function () {
+                 $('#sidebarCollapse').on('click', function () {
+                     $('#sidebar').toggleClass('active');
+                     $(this).toggleClass('active');
+                 });
+             });
+         </script>
+    </body>
+</html>

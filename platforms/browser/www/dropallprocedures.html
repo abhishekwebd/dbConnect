@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+        <title>Collapsible sidebar using Bootstrap 3</title>
+<link rel="stylesheet" href="css/loader.css">
+         <!-- Bootstrap CSS CDN -->
+  <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
+        <!-- Our Custom CSS -->
+        <link rel="stylesheet" href="css/style5.css">
+        <link rel="stylesheet" href="css/akModal.css">
+
+    <link rel="stylesheet" href="css/font-awesome.css">
+        <!-- jQuery CDN -->
+    <script src="js/angular.min.js"></script>
+    <script src="js/angular-touch.min.js"></script>
+    <script src="js/angular-animate.min.js"></script>
+            <script src="js/jquery.min.js"></script>
+
+               <script src="js/script.js"></script>
+              <style type="text/css">
+                  #sidebar{
+                    background-color: white;
+                    color: black;
+                  }
+                 #sidebar .sidebar-header{
+                    background: black;
+                    color: white; 
+                  }
+              </style> 
+    </head>
+    <body>
+
+    <div id="loading" class="loader">   
+    </div>
+    <div ng-app="myApp"  ng-controller="ViewConnCtrl">
+        <div class="wrapper">
+            <!-- Sidebar Holder -->
+      <div ng-include="'sidebar.html'"></div>
+
+            <!-- Page Content Holder -->
+            <div id="content" style="width: 100%;">
+
+                <nav class="navbar navbar-default ">
+                    <div class="container-fluid ">
+                    
+                                 <div class="navbar-header " style="width: 100%;">
+                            <button type="button" id="sidebarCollapse" class="navbar-btn">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </button>
+
+                            <button class="pull-right btn btn-danger" ng-click="Logout()"><i class="fa fa-power-off"></i></button>
+
+                        </div>
+                        <div class="text-center">
+   <span class="text-info"><b>{{ActiveDbName}}</b></span>
+</div>
+                        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                            <ul class="nav navbar-nav navbar-right">
+                                <li><a href="#">Page</a></li>
+                                <li><a href="#">Page</a></li>
+                                <li><a href="#">Page</a></li>
+                                <li><a href="#">Page</a></li>
+                            </ul>
+                        </div>
+                   
+                    </div>
+                </nav>
+
+    <div  style="overflow: scroll;" >
+
+        <div dir="ltr" style="text-align: left;font-size: small;" trbidi="on">
+      <div class="post">
+
+<label>Pro’s of using Drop / Create for a Procedure</label>
+<ol>
+<li>Objects can be rebuilt in a new location using source control (does not need to already exist)</li>
+<li>You don’t need to worry if the procedure already exists to determine how to write it</li>
+</ol>
+<label>I’ve mostly used drop create in places where I’ve worked, but I’ve just been convinced to use Alter (where applicable) instead.</label>
+<label>The script below will show the original procedure’s create date and modified date:</label>
+<label>[cc lang=”sql”]<br>
+SELECT CREATED, LAST_ALTERED<br>
+FROM INFORMATION_SCHEMA.ROUTINES<br>
+[/cc]</label>
+<label>As for the permissions issue, two things come up. The first is that I don’t set my permissions at the object level. I set them actually at the schema level (for 2005+). This comes in handy because whatever schema you create an object under, automatically inherits those permissions. However, if you have a DBA that sets more granular permissions on the objects, then drop/create will get you in trouble, because those permissions will forever be lost.</label>
+<label>Another issue with drop/create, is that in a highly transactional system, if you execute the drop statement and a call comes in prior to the create, you will receive errors. Alter will not do this however because it will acquire a schema lock prior to modifying the procedure.</label>
+
+</div>
+  <br><button class="btn btn-outline-danger" ng-click="Drop()">Click Here</button> to Drop All
+</div>
+
+
+
+         <span>{{alert}}</span>
+<br>
+                          
+
+                        <div id="opttable" style="font-size: small;overflow: scroll;"></div>        
+
+
+
+
+
+            </div>
+        </div>
+
+
+</div>
+
+<script>
+    var app = angular.module('myApp', []);
+    app.controller('ViewConnCtrl', function ($scope, $http,$window) {
+
+        
+    $scope.Name = localStorage.getItem("Name");
+    if(localStorage.getItem("active_DB") == null)
+ {
+    $scope.ActiveDbName = "Active Database Name will show here";
+ }
+ else
+ {
+  $scope.ActiveDbName = localStorage.getItem("active_DB");
+
+ }
+ if(localStorage.getItem("Ip") == null)
+ {
+
+    $http.get("https://freegeoip.net/json/").then(function (response) 
+        {
+            // $scope.ip = response.data.ip;
+           
+            localStorage.setItem("Ip",response.data.ip);
+         //  sessionStorage.setItem("Location",response.data.city+' | '+response.data.region);
+             localStorage.setItem("Location",response.data.city+' | '+response.data.region_name);
+            
+        });
+ } 
+
+
+
+    $scope.Logout = function () {
+
+                localStorage.removeItem("Code");
+                 localStorage.removeItem("Name");
+                 localStorage.removeItem("Email");
+                  localStorage.removeItem("active_DB");
+                 localStorage.removeItem("active_User");
+                 localStorage.removeItem("active_Server");
+                 localStorage.removeItem("active_Pass");
+                 window.location.href= "login.html";
+    }
+
+
+     $scope.Drop = function(){
+
+            if ($window.confirm("Please confirm?")) {
+
+     //alert(localStorage.getItem("serverpath")+"data.php?Code=execute&q="+q);
+           $http.get(localStorage.getItem("serverpath")+"clientdata.php?Code=dropallproc&db="+localStorage.getItem("active_DB").trim()+"&server="+localStorage.getItem("active_Server").trim()+"&username="+localStorage.getItem("active_User").trim()+"&password="+localStorage.getItem("active_Pass").trim())
+            .then(function (response) {
+          
+            var rows = "<table style='font-size:small;font-weight:normal;' class='table'>";
+             if(response.data.Check == 1){
+                $scope.alert = "All Procedures are  Dropped Successfully !";
+                   var out = response.data.result;
+            for(x in out){
+              rows += "<tr>";
+                for(y in out[x]){
+                  rows += "<td>"+out[x][y]+"</td>";
+              }
+              rows += "</tr>";
+            }
+            rows += "</table>";
+            $("#opttable").append(rows);
+          
+             }
+             else
+             {
+                $scope.alert = "Failed to Drop All Procedures !";
+                $("#opttable").empty();
+             }
+
+            
+
+            });
+
+            }else {
+                    $scope.alert = "Cancelled !";
+        
+                }
+     
+    }
+
+    
+});
+
+</script>
+<script type="text/javascript" src="js/sc_index.js"></script>
+<!--    <script type="text/javascript" src="js/akModal.js"></script> -->
+
+    
+
+         <script type="text/javascript">
+             $(document).ready(function () {
+                 $('#sidebarCollapse').on('click', function () {
+                     $('#sidebar').toggleClass('active');
+                     $(this).toggleClass('active');
+                 });
+             });
+         </script>
+    </body>
+</html>
