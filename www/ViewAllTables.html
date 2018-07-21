@@ -126,7 +126,7 @@
   
   var q = "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_CATALOG='"+localStorage.getItem("active_DB")+"'";
 
-    $http.get(localStorage.getItem("serverpath")+"clientdata.php?Code=execute&q="+q+"&db="+localStorage.getItem("active_DB").trim()+"&server="+localStorage.getItem("active_Server").trim()+"&username="+localStorage.getItem("active_User").trim()+"&password="+localStorage.getItem("active_Pass").trim())
+    $http.get(localStorage.getItem("serverpath")+"clientdata.php?Code=execute&q="+q+"&db="+escape(localStorage.getItem("active_DB").trim())+"&server="+escape(localStorage.getItem("active_Server").trim())+"&username="+escape(localStorage.getItem("active_User").trim())+"&password="+escape(localStorage.getItem("active_Pass").trim()))
             .then(function (response) {$scope.details = response.data.result; });
  }
  if(localStorage.getItem("Ip") == null)

@@ -34,8 +34,7 @@
     </head>
     <body>
 
-    <div id="loading" class="loader">   
-    </div>
+  
     <div ng-app="myApp"  ng-controller="DBDetailCtrl">
         <div class="wrapper">
             <!-- Sidebar Holder -->
@@ -75,39 +74,41 @@
     <div  style="overflow: scroll;" >
    
 
-                                <table class="table" ng-repeat="x in details"  >
+                                <table class="table"   >
                              <tr>
                                  <td>Server Name</td>
+
                                  <td>
-                                    <span ng-model="servername">{{x.Servername}}</span>
+                                    <input type="text" name="" ng-model="txtserver">
                                    </td>
                              </tr> 
                              <tr>
                                  <td>Database Name</td>
-                                 <td><span ng-model="databasename">{{x.Databasename}}</span>
+                                 <td>
+                                     <input type="text" name="" ng-model="txtdb">
                                   </td>
                              </tr> 
                              <tr>
                                  <td>Username</td>
-                                 <td><span ng-model="username">{{x.Username}}</span>
+                                 <td>
+                                     <input type="text" name="" ng-model="txtusername">
                                   </td>
                              </tr> 
                              <tr>
                                  <td>Password</td>
-                                 <td><span ng-model="password">{{x.Userpassword}}</span>
+                                 <td>
+                                     <input type="text" name="" ng-model="txtpassword">
                                   </td>
                              </tr>       
                                 </table>
 
 <div class="text-center">
 
-    <button type="button" class="btn btn-success" ng-click="Activate()">Activate</button>
-<button type="button" class="btn btn-info" ng-click="Edit()">Edit</button>
-<button type="button" class="btn btn-danger" ng-click="Delete()">Delete</button>  <br>
-    <a class="btn btn-warning" ng-show="editmode" ng-click="editmode=false" >Cancel</a>
-    <a class="btn btn-info" ng-show="editmode" ng-click="Save()" >Save</a>
+<button type="button" class="btn btn-info" ng-click="Save()">Save</button>
+<button type="button" class="btn btn-danger" ng-click="Cancel()">Cancel</button>
+
     <br>
-    {{alert}}
+    {{error}}
 </div>
                 
 
@@ -155,7 +156,14 @@
 var q = "select * from tblservercred where Code = "+sessionStorage.getItem("viewdb");
 
     $http.get(localStorage.getItem("serverpath")+"data.php?Code=execute&q="+q)
-            .then(function (response) {$scope.details = response.data.result; $scope.dbname = response.data.result[0].Databasename;});
+            .then(function (response) {$scope.details = response.data.result; 
+
+                    $scope.txtserver = response.data.result[0].Servername;
+                    $scope.txtdb = response.data.result[0].Databasename;
+                    $scope.txtusername = response.data.result[0].Username;
+                    $scope.txtpassword = response.data.result[0].Userpassword;
+
+                $scope.dbname = response.data.result[0].Databasename;});
 
     $scope.Logout = function () {
 
@@ -169,49 +177,30 @@ var q = "select * from tblservercred where Code = "+sessionStorage.getItem("view
                  window.location.href= "login.html";
     }
 
-    $scope.Activate = function(){
-        var q = "select * from tblservercred where Code = "+sessionStorage.getItem("viewdb");
-
-    $http.get(localStorage.getItem("serverpath")+"data.php?Code=execute&q="+q)
-            .then(function (response) {
-            localStorage.setItem("active_Server",response.data.result[0].Servername);   
-             localStorage.setItem("active_DB",response.data.result[0].Databasename); 
-              localStorage.setItem("active_User",response.data.result[0].Username); 
-               localStorage.setItem("active_Pass",response.data.result[0].Userpassword);          
-                 window.location.href= "dbdetail.html";
-      });
-       
-    }
-
-        $scope.Edit = function(){
-                window.location.href = "dbedit.html";
-        }
-    $scope.Delete = function(){
-
-         if ($window.confirm("Please confirm?")) {
-                  
-                         var  q = "exec sp_ServerCred "+sessionStorage.getItem("viewdb")+","+localStorage.getItem("Code")+",'server', '"+$scope.dbname+"','username','Userpassword','"+localStorage.getItem("Ip")+"','"+localStorage.getItem("Location")+"','D',0,1";
-
-    $http.get(localStorage.getItem("serverpath")+"data.php?Code=execute&q="+q)
-            .then(function (response) {
-                 $scope.alert = response.data.result[0].Msg;
-                 window.setTimeout(function(){
-        window.location.href = "ViewConnection.html";
-
-    }, 2000);
-      });
-
-                } else {
-                    $scope.alert = "Cancelled !";
-        
-                }
-
 
    
+     $scope.Save = function(){
+     
+       if($scope.txtserver != undefined && $scope.txtdb != undefined && $scope.txtusername != undefined && $scope.txtpassword != undefined){
+                q = "exec sp_ServerCred "+sessionStorage.getItem("viewdb")+","+localStorage.getItem("Code")+",'"+$scope.txtserver+"', '"+$scope.txtdb+"','"+$scope.txtusername+"','"+$scope.txtpassword+"','"+localStorage.getItem("Ip")+"','"+localStorage.getItem("Location")+"','U',0,1";
+                // alert(q);
+             $http.get(localStorage.getItem("serverpath")+"data.php?Code=execute&q="+q)
+             .then(function (response) { 
+                     $scope.error = response.data.result[0].Msg;
+                if(response.data.result[0].Code == 1){
+                     window.location.href= "dbdetail.html";
+                }
+                      
+            });
+                }
+                else
+                {
+                        $scope.error = "All Fields are Mendatory !";
+                }
        
     }
-     $scope.Save = function(){
-        alert($scope.txtservername);
+      $scope.Cancel = function(){
+   window.location.href = "dbdetail.html";
        
     }
 

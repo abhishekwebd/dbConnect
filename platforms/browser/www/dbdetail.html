@@ -78,34 +78,31 @@
                                 <table class="table" ng-repeat="x in details"  >
                              <tr>
                                  <td>Server Name</td>
-                                 <td><span ng-model="servername">{{x.Servername}}</span>
-                                 <input type="text" name="" ng-show="editmode" ng-value="{{x.Servername}}" ng-model="txtservername">
-                                 </td>
+                                 <td>
+                                    <span ng-model="servername">{{x.Servername}}</span>
+                                   </td>
                              </tr> 
                              <tr>
                                  <td>Database Name</td>
                                  <td><span ng-model="databasename">{{x.Databasename}}</span>
-                                 <input type="text" name="" ng-show="editmode"  value="{{x.Databasename}}"  ng-model="txtdatabasename">
-                             </td>
+                                  </td>
                              </tr> 
                              <tr>
                                  <td>Username</td>
                                  <td><span ng-model="username">{{x.Username}}</span>
-                                 <input type="text" name="" ng-show="editmode"  value="{{x.Username}}"  ng-model="txtusername">
-                             </td>
+                                  </td>
                              </tr> 
                              <tr>
                                  <td>Password</td>
                                  <td><span ng-model="password">{{x.Userpassword}}</span>
-                                 <input type="text" name="" ng-show="editmode"  value="{{x.Userpassword}}"  ng-model="txtuserpassword">
-                             </td>
+                                  </td>
                              </tr>       
                                 </table>
 
 <div class="text-center">
 
     <button type="button" class="btn btn-success" ng-click="Activate()">Activate</button>
-<button type="button" class="btn btn-info" ng-click="editmode=true">Edit</button>
+<button type="button" class="btn btn-info" ng-click="Edit()">Edit</button>
 <button type="button" class="btn btn-danger" ng-click="Delete()">Delete</button>  <br>
     <a class="btn btn-warning" ng-show="editmode" ng-click="editmode=false" >Cancel</a>
     <a class="btn btn-info" ng-show="editmode" ng-click="Save()" >Save</a>
@@ -185,6 +182,10 @@ var q = "select * from tblservercred where Code = "+sessionStorage.getItem("view
       });
        
     }
+
+        $scope.Edit = function(){
+                window.location.href = "dbedit.html";
+        }
     $scope.Delete = function(){
 
          if ($window.confirm("Please confirm?")) {
